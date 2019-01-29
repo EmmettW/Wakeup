@@ -37,19 +37,19 @@ var layout = {
     }
   }
 };
-	
+  
 var layout = {
-	scene: {
-		xaxis:{title: 'Quantity'},
-		yaxis:{title: 'Time'},
-		zaxis:{title: 'Price'},
-		},
-	autosize: false,
-	width: 700,
-	height: 700,
+  scene: {
+    xaxis:{title: 'Quantity'},
+    yaxis:{title: 'Time'},
+    zaxis:{title: 'Price'},
+    },
+  autosize: false,
+  width: 700,
+  height: 700,
 
 }
-	
+  
 Plotly.plot('graph', [{
   type: 'scatter3d',
   mode: 'lines',
@@ -58,12 +58,25 @@ Plotly.plot('graph', [{
   z: z,
   opacity: 1,
   line: {
-    width: 3,
+    width: 4,
     color: c,
-    reversescale: true
+    reversescale: false,
+   colorscale: 'Viridis'
   }
 }], layout);
-	
-	
+  
 });
+var cnt = 0;
+var interval = setInterval(function() {
+  
+  Plotly.extendTraces('graph', {
+   x: [[rand()*20]],
+    y: [[rand()*20]],
+     z: [[rand()*20]]
+  }, [0])
+  if(cnt === 100) clearInterval(interval);
+}, 1000);
 
+function rand() { 
+  return Math.random();
+}
