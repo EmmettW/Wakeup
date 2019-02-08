@@ -1,64 +1,82 @@
-
+Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/3d-line1.csv', function(err, rows){
+      function unpack(rows, key) {
+          return rows.map(function(row) 
+          { return row[key]; }); }
+var x = unpack(rows , 'x');
+var y = unpack(rows , 'y');
+var z = unpack(rows , 'z'); 
+var c = unpack(rows , 'color');
 var layout = {
- datarevision: 0,
+  title: {
+    text:'Plot Title',
+    font: {
+      family: 'Courier New, monospace',
+      size: 24
+    },
+    xref: 'paper',
+    x: 0.05,
+  },
+  xaxis: {
+    title: {
+      text: 'x Axis',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+  },
+  yaxis: {
+    title: {
+      text: 'y Axis',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    }
+  }
+};
+  
+var layout = {
   scene: {
     xaxis:{title: 'Quantity'},
-    yaxis:{title: 'Date'},
-    zaxis:{title: 'Cost Basis'},
+    yaxis:{title: 'Time'},
+    zaxis:{title: 'Price'},
     },
   autosize: false,
   width: 700,
   height: 700,
+
 }
-
-var xSet = [1,2]; // qty.
-var ySet = ['2015-01-30', '2015-01-31']; // date
-var zSet = [1,2]; // price
-var colorSet = [0,10];
-var day = 0;
-
+  
 Plotly.plot('graph', [{
   type: 'scatter3d',
   mode: 'lines',
-  x: xSet,
-  y: ySet,
-  z: zSet,
+  x: x,
+  y: y,
+  z: z,
   opacity: 1,
   line: {
-   width: 6,
-   color: colorSet,
-   reversescale: false,
-  colorscale: 'Viridis'
+    width: 4,
+    color: c,
+    reversescale: false,
+   colorscale: 'Viridis'
   }
 }], layout);
-
+  
+});
+var cnt = 0;
 var interval = setInterval(function() {
-  xSet.push(floor(rand()*20));
-  ySet.push('2015-02-' + (++day));
-  zSet.push(floor(rand()*20));
-  colorSet.push(floor(rand()*10));
-  layout.datarevision += 1;
-
-  Plotly.react('graph', [{
-    type: 'scatter3d',
-    mode: 'lines',
-    x: xSet,
-    y: ySet,
-    z: zSet,
-    opacity: 1,
-    line: {
-      width: 6,
-      color: colorSet,
-      colorscale: 'Viridis'
-    }
-  }], layout);
-  if(day === 28) clearInterval(interval);
-}, 500);
+  
+  Plotly.extendTraces('graph', {
+   x: [[rand()*20]],
+    y: [[rand()*20]],
+     z: [[rand()*20]]
+  }, [0])
+  if(cnt === 100) clearInterval(interval);
+}, 1000);
 
 function rand() { 
   return Math.random();
-}
-
-function floor(x) {
-  return Math.floor(x);
 }
